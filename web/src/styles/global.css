@@ -1,0 +1,42 @@
+@import url('./tokens.css');
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--fg1);
+  overflow-x: hidden;
+}
+
+body {
+  font-family: var(--font-ui);
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+a {
+  color: inherit;
+}
+
+:root {
+  --accent: #c85c81;
+  --coral-500: #c85c81;
+}
+
+html.dark {
+  --bg: #1a1815;
+  --fg1: #f3eada;
+  --fg2: #c9bfae;
+  --fg3: #9a907f;
+  --fg4: #6b6354;
+  --border: #2e2a24;
+}

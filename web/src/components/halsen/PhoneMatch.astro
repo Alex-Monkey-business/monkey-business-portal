@@ -1,0 +1,64 @@
+---
+import VippsWordmark from './VippsWordmark.astro';
+---
+
+<div class="phone">
+  <div class="phone-screen">
+    <div class="phone-body scr-match" data-phone-loop="match" data-step="0">
+      <div class="mx-back">‹ Back</div>
+
+      <div class="mx-card">
+        <div class="mx-card-row">
+          <span class="mini-chip"><i class="tdot w"></i>White</span>
+          <span class="mx-when">Wed Apr 22 · 18:00</span>
+        </div>
+        <div class="mx-teams">Borre R.<span class="vs">vs</span>Halsen W.</div>
+        <div class="mx-sub">Taffel League · Round 1</div>
+      </div>
+
+      <div class="mx-section">Referee</div>
+      <div class="mx-dommer">
+        <button class="dchip" data-ref="filip">Filip HF</button>
+        <button class="dchip" data-ref="fredrik">Fredrik V</button>
+        <button class="dchip" data-ref="ludvik">Ludvik TS</button>
+        <button class="dchip" data-ref="olav">Olav J</button>
+        <button class="dchip" data-ref="samuel">Samuel</button>
+      </div>
+
+      <div class="mx-amount">
+        <div class="mx-amount-k">Referee fee</div>
+        <div class="mx-amount-v">800<span>kr</span></div>
+      </div>
+
+      <button class="mx-cta" type="button">
+        <span class="cta-face cta-default">
+          <span class="cta-amt">Send 800 kr with</span>
+          <VippsWordmark height={14} class="cta-word" />
+        </span>
+        <span class="cta-face cta-done">
+          <span class="cta-check">✓</span>
+          Sent to Filip HF
+        </span>
+      </button>
+
+      <div class="vipps-sheet" aria-hidden="true">
+        <div class="vipps-sheet-inner">
+          <div class="vipps-top">
+            <VippsWordmark height={18} class="sheet-word" />
+            <span class="vipps-x">×</span>
+          </div>
+          <div class="vipps-label">To</div>
+          <div class="vipps-name">Filip HF</div>
+          <div class="vipps-amt">800,<small>00</small> kr</div>
+          <div class="vipps-note">Referee fee · Halsen G15</div>
+          <button class="vipps-send" type="button">
+            <span class="send-text">Send</span>
+            <span class="send-spin" aria-hidden="true"></span>
+            <span class="send-check" aria-hidden="true">✓</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="phone-home"></div>
+  </div>
+</div>

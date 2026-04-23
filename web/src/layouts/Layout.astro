@@ -1,0 +1,47 @@
+---
+import '../styles/global.css';
+import '../styles/landing.css';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  accent?: string;
+}
+
+const {
+  title = 'Alex Monkey Business',
+  description = "A portal to the things I'm tinkering with.",
+  accent,
+} = Astro.props;
+
+const htmlStyle = accent
+  ? `--accent: ${accent}; --coral-500: ${accent};`
+  : undefined;
+---
+
+<!doctype html>
+<html lang="en" style={htmlStyle}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/assets/mark.svg" />
+    <script is:inline>
+      try {
+        if (localStorage.getItem('mb-theme') === 'dark') {
+          document.documentElement.classList.add('dark');
+        }
+      } catch (_) {}
+    </script>
+  </head>
+  <body>
+    <Nav />
+    <main id="top">
+      <slot />
+      <Footer />
+    </main>
+  </body>
+</html>

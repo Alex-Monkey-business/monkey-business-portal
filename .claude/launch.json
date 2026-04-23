@@ -1,0 +1,22 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "astro",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev", "--prefix", "web"],
+      "port": 4321
+    },
+    {
+      "name": "halsen",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "dev",
+        "--prefix",
+        "/Users/alexandersamnoy/Desktop/Fotball app Halsen G2015/halsen-dommerutlegg"
+      ],
+      "port": 5174
+    }
+  ]
+}

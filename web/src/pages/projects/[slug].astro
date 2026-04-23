@@ -1,0 +1,95 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { projects } from '../../data/projects';
+
+export function getStaticPaths() {
+  const customPages = new Set(['halsen-g15']);
+  return projects
+    .filter((p) => !customPages.has(p.slug))
+    .map((p) => ({ params: { slug: p.slug }, props: { project: p } }));
+}
+
+const { project } = Astro.props;
+---
+
+<Layout title={`${project.title}${project.titleEm ? ' ' + project.titleEm : ''} — Alex Monkey Business`}>
+  <section class="project-detail">
+    <a class="back" href="/#projects">← Back</a>
+    <h1 class="detail-title">
+      {project.title}
+      {project.titleEm && (
+        <>
+          {' '}
+          <em>{project.titleEm}</em>
+        </>
+      )}
+    </h1>
+    <p class="detail-meta">
+      <span>{project.year}</span>
+      {project.status === 'wip' && <span class="tag">wip</span>}
+    </p>
+    <p class="detail-placeholder">Coming soon.</p>
+  </section>
+</Layout>
+
+<style>
+  .project-detail {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 24vh 40px 14vh;
+  }
+  @media (max-width: 640px) {
+    .project-detail {
+      padding: 20vh 22px 10vh;
+    }
+  }
+  .back {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--fg3);
+    text-decoration: none;
+    letter-spacing: 0.06em;
+    transition: color 160ms var(--ease-out);
+  }
+  .back:hover {
+    color: var(--accent);
+  }
+  .detail-title {
+    font-family: var(--font-display);
+    font-size: clamp(56px, 10vw, 128px);
+    line-height: 0.92;
+    letter-spacing: -0.035em;
+    font-weight: 400;
+    margin: 32px 0 24px;
+    color: var(--fg1);
+  }
+  .detail-title em {
+    font-style: italic;
+    color: var(--accent);
+  }
+  .detail-meta {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--fg3);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin: 0 0 64px;
+  }
+  .detail-meta .tag {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    color: var(--accent);
+    padding: 2px 8px;
+    border: 1px solid currentColor;
+    border-radius: 999px;
+  }
+  .detail-placeholder {
+    font-family: var(--font-display);
+    font-size: clamp(22px, 3vw, 28px);
+    color: var(--fg3);
+    font-style: italic;
+  }
+</style>

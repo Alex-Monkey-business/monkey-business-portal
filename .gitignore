@@ -1,0 +1,32 @@
+# Dependencies
+**/node_modules/
+
+# Build output
+**/dist/
+**/.astro/
+**/out/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment
+**/.env
+**/.env.local
+**/.env.*.local
+**/.env.production
+**/.env.development
+
+# OS
+.DS_Store
+**/.DS_Store
+Thumbs.db
+
+# Editors
+.idea/
+**/.idea/
+
+# Claude local-only settings (user-specific; keep launch.json/settings.json shared)
+**/.claude/settings.local.json

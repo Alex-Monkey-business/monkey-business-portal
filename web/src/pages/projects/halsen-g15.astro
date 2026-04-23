@@ -1,0 +1,359 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PhoneDashboard from '../../components/halsen/PhoneDashboard.astro';
+import PhoneMatch from '../../components/halsen/PhoneMatch.astro';
+import PhoneSeason from '../../components/halsen/PhoneSeason.astro';
+import '../../styles/halsen.css';
+---
+
+<Layout title="BenchBoss — Alex Monkey Business">
+  <div class="hg-page">
+    <section class="hg-hero">
+      <a href="/#projects" class="hg-back">← Back</a>
+
+      <div>
+        <span class="hg-eyebrow">Case · Halsen G15</span>
+        <h1 class="hg-title">Bench<em>Boss</em></h1>
+        <p class="hg-lede">
+          Full control of your team. Most of it on autopilot.
+        </p>
+        <div class="hg-stackinfo">
+          <span class="hg-stackinfo-label">Stack</span>
+          <span class="hg-stackinfo-value">Vue 3 · Vite · Pinia · Supabase · Netlify · Vipps · NFF</span>
+        </div>
+      </div>
+
+      <div class="hg-stage">
+        <div class="phone-secondary"><PhoneSeason /></div>
+        <div class="phone-primary"><PhoneDashboard /></div>
+      </div>
+    </section>
+
+    <section class="hg-features">
+      <div class="hg-feature">
+        <div class="hg-feature-copy">
+          <span class="num">01</span>
+          <h2>Every match, <em>one tap</em>.</h2>
+          <p>
+            Pick the ref, send the fee via Vipps. Amount pre-filled, expense logged —
+            no paperwork.
+          </p>
+        </div>
+        <div class="hg-feature-phone"><PhoneMatch /></div>
+      </div>
+
+      <div class="hg-feature flipped">
+        <div class="hg-feature-copy">
+          <span class="num">02</span>
+          <h2>Settlement that <em>does itself</em>.</h2>
+          <p>
+            Every expense totalled per coach, live. Who owes whom — settled by the time
+            the season ends.
+          </p>
+        </div>
+        <div class="hg-feature-phone"><PhoneSeason /></div>
+      </div>
+
+      <div class="hg-feature">
+        <div class="hg-feature-copy">
+          <span class="num">03</span>
+          <h2>Team colors, <em>one glance</em>.</h2>
+          <p>
+            Green, red, white — filter by squad and home/away. The whiteboard in the
+            changing room, on your phone.
+          </p>
+        </div>
+        <div class="hg-feature-phone"><PhoneDashboard /></div>
+      </div>
+    </section>
+
+    <section class="hg-list">
+      <span class="hg-list-label">Under the hood</span>
+      <ul>
+        <li style="--i:0"><span class="n">01</span><span class="text"><em>NFF sync</em> — times, venues and opponents update on their own.</span></li>
+        <li style="--i:1"><span class="n">02</span><span class="text">Assign <em>coaches and refs</em> per match — two taps.</span></li>
+        <li style="--i:2"><span class="n">03</span><span class="text"><em>Excel export</em> for end-of-season accounts.</span></li>
+      </ul>
+    </section>
+
+    <div class="hg-stack">
+      <span class="live">Live with Halsen G2015</span>
+      <span class="dot"></span>
+      <span>Vue 3 · Vite · Supabase · Netlify</span>
+      <span class="dot"></span>
+      <span>Design + build · Alex</span>
+    </div>
+  </div>
+</Layout>
+
+<script>
+  const easeOut = (t: number) => 1 - Math.pow(1 - t, 3);
+
+  const formatNumber = (n: number) =>
+    n >= 1000 ? n.toLocaleString('nb-NO').replace(/,/g, ' ') : String(Math.round(n));
+
+  const revealObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          e.target.classList.add('is-in');
+          revealObserver.unobserve(e.target);
+        }
+      });
+    },
+    { threshold: 0.15 }
+  );
+  document
+    .querySelectorAll('.hg-feature, .hg-list li')
+    .forEach((el) => revealObserver.observe(el));
+
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // ===== Phone demo loops =====
+  type Loop = {
+    root: HTMLElement;
+    visible: boolean;
+    timers: number[];
+    start: () => void;
+    stop: () => void;
+  };
+
+  const clearTimers = (loop: Loop) => {
+    loop.timers.forEach((t) => clearTimeout(t));
+    loop.timers = [];
+  };
+
+  const animateTo = (el: HTMLElement, target: number, suffix: string, duration = 1400) => {
+    const start = performance.now();
+    const step = (now: number) => {
+      const t = Math.min(1, (now - start) / duration);
+      const v = target * easeOut(t);
+      el.textContent = formatNumber(v) + suffix;
+      if (t < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  };
+
+  const resetCountEls = (root: HTMLElement) => {
+    root.querySelectorAll<HTMLElement>('[data-kpi-target]').forEach((el) => {
+      const suffix = el.dataset.kpiSuffix ?? '';
+      el.textContent = '0' + suffix;
+    });
+  };
+
+  const makeDashboardLoop = (root: HTMLElement): Loop => {
+    const cards = Array.from(root.querySelectorAll<HTMLElement>('.match-card'));
+    const whereChips = Array.from(root.querySelectorAll<HTMLElement>('[data-chip-group="where"] .chip'));
+    const teamChips = Array.from(root.querySelectorAll<HTMLElement>('[data-chip-group="team"] .chip'));
+
+    const setChip = (chips: HTMLElement[], val: string) => {
+      chips.forEach((c) => c.classList.toggle('is-active', c.dataset.val === val));
+    };
+
+    const applyFilter = (where: string, team: string) => {
+      cards.forEach((c) => {
+        const t = c.dataset.team ?? '';
+        const w = c.dataset.where ?? '';
+        const matches = (team === 'all' || t === team) && (where === 'all' || w === where);
+        c.classList.toggle('is-filtered', !matches);
+      });
+    };
+
+    const tap = (el: HTMLElement | undefined) => {
+      if (!el) return;
+      el.classList.add('is-tapping');
+      setTimeout(() => el.classList.remove('is-tapping'), 420);
+    };
+
+    const loop: Loop = {
+      root,
+      visible: false,
+      timers: [],
+      start() {
+        clearTimers(loop);
+        // Start from all-visible
+        setChip(whereChips, 'all');
+        setChip(teamChips, 'all');
+        applyFilter('all', 'all');
+
+        const schedule = (ms: number, fn: () => void) => {
+          loop.timers.push(window.setTimeout(fn, ms));
+        };
+
+        schedule(1800, () => {
+          tap(teamChips.find((c) => c.dataset.val === 'g'));
+          setChip(teamChips, 'g');
+          applyFilter('all', 'g');
+        });
+        schedule(3800, () => {
+          tap(whereChips.find((c) => c.dataset.val === 'home'));
+          setChip(whereChips, 'home');
+          applyFilter('home', 'g');
+        });
+        schedule(6800, () => {
+          tap(teamChips.find((c) => c.dataset.val === 'all'));
+          tap(whereChips.find((c) => c.dataset.val === 'all'));
+          setChip(whereChips, 'all');
+          setChip(teamChips, 'all');
+          applyFilter('all', 'all');
+        });
+        schedule(9000, () => loop.start());
+      },
+      stop() { clearTimers(loop); },
+    };
+    return loop;
+  };
+
+  const makeMatchLoop = (root: HTMLElement): Loop => {
+    const dchips = Array.from(root.querySelectorAll<HTMLElement>('.dchip'));
+    const cta = root.querySelector<HTMLElement>('.mx-cta');
+    const sendBtn = root.querySelector<HTMLElement>('.vipps-send');
+
+    const setStep = (v: string) => root.setAttribute('data-step', v);
+    const setVippsOpen = (v: boolean) => root.setAttribute('data-vipps-open', v ? '1' : '0');
+    const setVippsShow = (v: boolean) => root.setAttribute('data-vipps-show', v ? '1' : '0');
+    const setVippsState = (v: string) => root.setAttribute('data-vipps-state', v);
+
+    const tap = (el: HTMLElement | null) => {
+      if (!el) return;
+      el.classList.add('is-tapping');
+      setTimeout(() => el.classList.remove('is-tapping'), 420);
+    };
+
+    const reset = () => {
+      dchips.forEach((c) => c.classList.remove('is-selected'));
+      setStep('0');
+      setVippsOpen(false);
+      setVippsShow(false);
+      setVippsState('idle');
+    };
+
+    const loop: Loop = {
+      root,
+      visible: false,
+      timers: [],
+      start() {
+        clearTimers(loop);
+        reset();
+
+        const schedule = (ms: number, fn: () => void) => {
+          loop.timers.push(window.setTimeout(fn, ms));
+        };
+
+        schedule(1500, () => {
+          const filip = dchips.find((c) => c.dataset.ref === 'filip');
+          tap(filip || null);
+          filip?.classList.add('is-selected');
+          setVippsShow(true);
+        });
+        schedule(3200, () => {
+          tap(cta);
+          setVippsOpen(true);
+        });
+        schedule(4800, () => {
+          tap(sendBtn);
+          setVippsState('sending');
+        });
+        schedule(6300, () => setVippsState('sent'));
+        schedule(7100, () => {
+          setVippsOpen(false);
+          setStep('done');
+        });
+        schedule(10000, () => loop.start());
+      },
+      stop() { clearTimers(loop); },
+    };
+    return loop;
+  };
+
+  const makeSeasonLoop = (root: HTMLElement): Loop => {
+    const kpiEls = Array.from(root.querySelectorAll<HTMLElement>('[data-kpi-target]'));
+
+    const setStep = (v: string) => root.setAttribute('data-step', v);
+
+    const loop: Loop = {
+      root,
+      visible: false,
+      timers: [],
+      start() {
+        clearTimers(loop);
+        setStep('0');
+        resetCountEls(root);
+
+        const schedule = (ms: number, fn: () => void) => {
+          loop.timers.push(window.setTimeout(fn, ms));
+        };
+
+        schedule(600, () => {
+          kpiEls.forEach((el) => {
+            const target = Number(el.dataset.kpiTarget ?? '0');
+            const suffix = el.dataset.kpiSuffix ?? '';
+            animateTo(el, target, suffix, 1500);
+          });
+        });
+        schedule(1500, () => setStep('1'));
+        schedule(3600, () => setStep('2'));
+        schedule(7500, () => loop.start());
+      },
+      stop() { clearTimers(loop); },
+    };
+    return loop;
+  };
+
+  const loops: Loop[] = [];
+  if (!reduce) {
+    document.querySelectorAll<HTMLElement>('[data-phone-loop="dashboard"]')
+      .forEach((el) => loops.push(makeDashboardLoop(el)));
+    document.querySelectorAll<HTMLElement>('[data-phone-loop="match"]')
+      .forEach((el) => loops.push(makeMatchLoop(el)));
+    document.querySelectorAll<HTMLElement>('[data-phone-loop="season"]')
+      .forEach((el) => loops.push(makeSeasonLoop(el)));
+
+    const phoneObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          const loop = loops.find((l) => l.root === e.target);
+          if (!loop) return;
+          if (e.isIntersecting && !loop.visible) {
+            loop.visible = true;
+            loop.start();
+          } else if (!e.isIntersecting && loop.visible) {
+            loop.visible = false;
+            loop.stop();
+          }
+        });
+      },
+      { threshold: 0.25 }
+    );
+    loops.forEach((l) => phoneObserver.observe(l.root));
+  } else {
+    // Reduced motion: show final "full" state, no animation
+    document.querySelectorAll<HTMLElement>('[data-phone-loop="season"]')
+      .forEach((root) => {
+        root.setAttribute('data-step', '2');
+        root.querySelectorAll<HTMLElement>('[data-kpi-target]').forEach((el) => {
+          const target = Number(el.dataset.kpiTarget ?? '0');
+          const suffix = el.dataset.kpiSuffix ?? '';
+          el.textContent = formatNumber(target) + suffix;
+        });
+      });
+  }
+
+  if (!reduce) {
+    const stage = document.querySelector<HTMLElement>('.hg-stage');
+    const primary = stage?.querySelector<HTMLElement>('.phone-primary');
+    const secondary = stage?.querySelector<HTMLElement>('.phone-secondary');
+    let raf = 0;
+    const onScroll = () => {
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        const y = window.scrollY;
+        if (primary) primary.style.translate = `0 ${y * -0.04}px`;
+        if (secondary) secondary.style.translate = `0 ${y * -0.08}px`;
+        raf = 0;
+      });
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  }
+</script>
