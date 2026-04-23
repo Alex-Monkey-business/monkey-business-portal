@@ -3,6 +3,7 @@ import '../styles/global.css';
 import '../styles/landing.css';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
+import SplashOverlay from '../components/SplashOverlay.astro';
 
 interface Props {
   title?: string;
@@ -50,9 +51,15 @@ const htmlStyle = accent
           document.documentElement.classList.add('dark');
         }
       } catch (_) {}
+      try {
+        if (sessionStorage.getItem('mb-splash-seen') === '1') {
+          document.documentElement.classList.add('splash-seen');
+        }
+      } catch (_) {}
     </script>
   </head>
   <body>
+    <SplashOverlay />
     <Nav />
     <main id="top">
       <slot />
