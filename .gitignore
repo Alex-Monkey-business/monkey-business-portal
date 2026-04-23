@@ -30,3 +30,6 @@ Thumbs.db
 
 # Claude local-only settings (user-specific; keep launch.json/settings.json shared)
 **/.claude/settings.local.json
+
+# Local Netlify folder
+.netlify
