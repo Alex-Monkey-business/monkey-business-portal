@@ -33,3 +33,6 @@ Thumbs.db
 
 # Local Netlify folder
 .netlify
+
+# Local source images (not for repo)
+Pics/

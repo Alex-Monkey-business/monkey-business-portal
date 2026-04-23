@@ -19,23 +19,34 @@ import { projects } from '../data/projects';
     </span>
     <ul class="projects">
       {
-        projects.map((p, i) => (
-          <li style={`--i:${i}`}>
-            <a href={`/projects/${p.slug}`}>
-              <span class="title">
-                {p.title}
-                {p.titleEm && (
-                  <>
-                    {' '}
-                    <em>{p.titleEm}</em>
-                  </>
-                )}
-                {p.status === 'wip' && <span class="tag">wip</span>}
-              </span>
-              <span class="year">{p.year}</span>
-            </a>
-          </li>
-        ))
+        projects.map((p, i) => {
+          const href = p.url ?? `/projects/${p.slug}`;
+          const external = Boolean(p.url);
+          return (
+            <li style={`--i:${i}`}>
+              <a
+                href={href}
+                class={external ? 'is-external' : undefined}
+                target={external ? '_blank' : undefined}
+                rel={external ? 'noopener noreferrer' : undefined}
+              >
+                <span class="title">
+                  {p.title}
+                  {p.titleEm && (
+                    <>
+                      {' '}
+                      <em>{p.titleEm}</em>
+                    </>
+                  )}
+                  {p.status === 'wip' && <span class="tag">wip</span>}
+                  {external && <span class="ext" aria-hidden="true">↗</span>}
+                </span>
+                {p.subtitle && <span class="subtitle">{p.subtitle}</span>}
+                <span class="year">{p.year}</span>
+              </a>
+            </li>
+          );
+        })
       }
     </ul>
   </section>

@@ -223,14 +223,31 @@ ul.projects li.is-in {
 ul.projects a {
   display: grid;
   grid-template-columns: 1fr auto;
+  grid-template-areas:
+    "title year"
+    "subtitle subtitle";
   align-items: baseline;
-  gap: 20px;
+  column-gap: 20px;
+  row-gap: 4px;
   padding: 20px 0;
   text-decoration: none;
   color: var(--fg1);
   border-bottom: 1px solid var(--border);
   transition: padding-left 340ms var(--ease-out), color 180ms var(--ease-out);
   position: relative;
+}
+ul.projects .title { grid-area: title; }
+ul.projects .year { grid-area: year; }
+ul.projects .subtitle {
+  grid-area: subtitle;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  color: var(--fg3);
+  transition: color 180ms var(--ease-out);
+}
+ul.projects a:hover .subtitle {
+  color: color-mix(in oklab, var(--accent) 70%, var(--fg3));
 }
 ul.projects li:first-child a {
   border-top: 1px solid var(--border);
@@ -255,9 +272,25 @@ ul.projects a::before {
   color: var(--accent);
   transition: transform 340ms var(--ease-out), opacity 240ms var(--ease-out);
 }
+ul.projects a.is-external::before { content: '↗'; }
 ul.projects a:hover::before {
   transform: translate(0, -50%);
   opacity: 1;
+}
+
+.title .ext {
+  display: inline-block;
+  margin-left: 10px;
+  font-family: var(--font-mono);
+  font-size: 0.68em;
+  color: var(--fg3);
+  position: relative;
+  top: -4px;
+  transition: transform 220ms var(--ease-out), color 220ms var(--ease-out);
+}
+ul.projects a:hover .title .ext {
+  color: var(--accent);
+  transform: translate(2px, -2px);
 }
 
 .title {
