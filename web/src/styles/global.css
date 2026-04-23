@@ -28,8 +28,8 @@ a {
 }
 
 :root {
-  --accent: #c85c81;
-  --coral-500: #c85c81;
+  --accent: var(--amb-pink);
+  --coral-500: var(--amb-pink);
 }
 
 html.dark {

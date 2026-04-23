@@ -89,8 +89,10 @@ import '../../styles/halsen.css';
 <script>
   const easeOut = (t: number) => 1 - Math.pow(1 - t, 3);
 
-  const formatNumber = (n: number) =>
-    n >= 1000 ? n.toLocaleString('nb-NO').replace(/,/g, ' ') : String(Math.round(n));
+  const formatNumber = (n: number) => {
+    const v = Math.round(n);
+    return v >= 1000 ? v.toLocaleString('nb-NO').replace(/,/g, ' ') : String(v);
+  };
 
   const revealObserver = new IntersectionObserver(
     (entries) => {

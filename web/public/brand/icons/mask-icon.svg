@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 220"  fill="none" style="color: currentColor;"><g transform="translate(30,10) scale(0.9)">
+    
+    <g stroke="currentColor" stroke-width="18" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M60 184 V70 Q60 38 90 38"/>
+      <path d="M60 114 H85 C100 114 109 110 114 99"/>
+      <path d="M124 184 V38 L172 116 L220 38 V184"/>
+      <path d="M252 184 V38"/>
+      <path d="M252 38 H285 C315 38 328 55 328 78 C328 102 314 114 284 114 H252"/>
+      <path d="M252 114 H286 C318 114 332 130 332 150 C332 173 318 184 286 184 H252"/>
+    </g>
+    </g></svg>

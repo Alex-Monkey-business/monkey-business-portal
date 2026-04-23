@@ -24,14 +24,42 @@
   }
 }
 
-.nav .mark {
-  width: 32px;
-  height: 32px;
-  transition: transform 500ms var(--ease-spring);
-  display: block;
+.nav-home {
+  display: inline-flex;
+  align-items: center;
+  color: var(--fg1);
+  transition: color 280ms var(--ease-out);
+  text-decoration: none;
 }
-.nav .mark:hover {
-  transform: rotate(-12deg) scale(1.08);
+.nav-home:hover { color: var(--accent); }
+
+.nav .mark {
+  height: 26px;
+  width: auto;
+  display: block;
+  transition: transform 480ms var(--ease-spring);
+}
+.nav-home:hover .mark {
+  transform: rotate(-3deg) scale(1.05);
+}
+
+.nav .mark path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+}
+.nav-home:hover .mark path {
+  animation: amb-redraw 820ms var(--ease-out) forwards;
+  animation-delay: calc(var(--i, 0) * 60ms);
+}
+@keyframes amb-redraw {
+  0%   { stroke-dashoffset: 1; }
+  100% { stroke-dashoffset: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav .mark { transition: none !important; }
+  .nav-home:hover .mark { transform: none !important; }
+  .nav-home:hover .mark path { animation: none !important; }
 }
 
 .nav ul {

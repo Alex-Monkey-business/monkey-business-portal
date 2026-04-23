@@ -1,0 +1,30 @@
+---
+interface Props {
+  height?: number;
+  class?: string;
+}
+const { height = 28, class: className = '' } = Astro.props;
+---
+
+<svg
+  class={`amb-mark ${className}`}
+  viewBox="0 0 360 220"
+  height={height}
+  fill="none"
+  aria-label="AMB"
+  role="img"
+>
+  <g
+    stroke="currentColor"
+    stroke-width="18"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  >
+    <path pathLength="1" style="--i:0" d="M60 184 V70 Q60 38 90 38" />
+    <path pathLength="1" style="--i:1" d="M60 114 H85 C100 114 109 110 114 99" />
+    <path pathLength="1" style="--i:2" d="M124 184 V38 L172 116 L220 38 V184" />
+    <path pathLength="1" style="--i:3" d="M252 184 V38" />
+    <path pathLength="1" style="--i:4" d="M252 38 H285 C315 38 328 55 328 78 C328 102 314 114 284 114 H252" />
+    <path pathLength="1" style="--i:5" d="M252 114 H286 C318 114 332 130 332 150 C332 173 318 184 286 184 H252" />
+  </g>
+</svg>

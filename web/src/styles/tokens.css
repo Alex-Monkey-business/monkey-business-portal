@@ -33,6 +33,14 @@
 
   --paper:   #FFFFFF;   /* White — modals/overlays */
 
+  /* AMB brand palette (from amb_brand_assets/tokens/colors.css) */
+  --amb-ink:   #1B1C1F;
+  --amb-sand:  #EFE7DA;
+  --amb-pink:  #C85E87;  /* signature accent */
+  --amb-sun:   #EFC64C;
+  --amb-grape: #9277BA;
+  --amb-snow:  #F8F4EC;
+
   /* Brand — Coral is the hero (token name kept for compat) */
   --coral-50:  #FFF6DE;
   --coral-100: #F5C2BB;  /* Blush */
