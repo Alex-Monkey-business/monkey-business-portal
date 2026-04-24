@@ -1,0 +1,169 @@
+---
+// First-load splash. Shown once per tab session (sessionStorage flag
+// `mb-splash-seen`). A gating class on <html> set in Layout.astro hides
+// it on return visits before any paint, so there is no flash.
+---
+
+<div
+  class="mb-splash"
+  id="mb-splash"
+  role="presentation"
+  data-splash
+>
+  <div class="mb-splash__stage" aria-hidden="true">
+    <img class="mb-splash__frame mb-splash__frame--wave"
+         src="/brand/motion/splash-sequence/frame-01-wave.svg"
+         alt="" />
+    <img class="mb-splash__frame mb-splash__frame--curve"
+         src="/brand/motion/splash-sequence/frame-02-curve.svg"
+         alt="" />
+    <img class="mb-splash__frame mb-splash__frame--outline"
+         src="/brand/motion/splash-sequence/frame-03-head-outline.svg"
+         alt="" />
+    <img class="mb-splash__hero"
+         src="/brand/logos/monkey-freerider.svg"
+         alt="" />
+    <img class="mb-splash__mark"
+         src="/brand/motion/splash-sequence/frame-05-monogram.svg"
+         alt="" />
+  </div>
+</div>
+
+<style>
+  .mb-splash {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg);
+    color: var(--fg1);
+    animation: mb-splash-out 360ms var(--ease-out) 1740ms forwards;
+    will-change: opacity;
+  }
+
+  .mb-splash.is-dismissed {
+    animation: mb-splash-out 260ms var(--ease-out) forwards;
+  }
+
+  :global(html.splash-seen) .mb-splash {
+    display: none;
+  }
+
+  .mb-splash__stage {
+    position: relative;
+    width: min(60vw, 420px);
+    aspect-ratio: 5 / 4;
+    display: grid;
+    place-items: center;
+  }
+
+  .mb-splash__frame,
+  .mb-splash__hero,
+  .mb-splash__mark {
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    color: var(--fg1);
+  }
+
+  .mb-splash__frame--wave    { animation: mb-beat-wave    420ms var(--ease-out) forwards; }
+  .mb-splash__frame--curve   { animation: mb-beat-curve   420ms var(--ease-out) 260ms forwards; }
+  .mb-splash__frame--outline { animation: mb-beat-outline 460ms var(--ease-out) 520ms forwards; }
+
+  .mb-splash__hero {
+    width: 82%;
+    height: auto;
+    animation: mb-beat-hero 1200ms var(--ease-spring) 820ms forwards;
+  }
+
+  .mb-splash__mark {
+    width: 22%;
+    height: auto;
+    top: auto;
+    bottom: -12%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
+    color: var(--fg3);
+    animation: mb-beat-mark 600ms var(--ease-out) 1280ms forwards;
+  }
+
+  @keyframes mb-beat-wave {
+    0%   { opacity: 0; transform: translateY(8px); }
+    40%  { opacity: 1; }
+    100% { opacity: 0; transform: translateY(-4px); }
+  }
+  @keyframes mb-beat-curve {
+    0%   { opacity: 0; transform: translateY(8px) rotate(-2deg); }
+    40%  { opacity: 1; transform: translateY(0) rotate(0); }
+    100% { opacity: 0; transform: translateY(-4px); }
+  }
+  @keyframes mb-beat-outline {
+    0%   { opacity: 0; transform: scale(0.94); }
+    45%  { opacity: 1; transform: scale(1); }
+    100% { opacity: 0; transform: scale(1.04); }
+  }
+  @keyframes mb-beat-hero {
+    0%   { opacity: 0; transform: scale(0.82); }
+    35%  { opacity: 1; transform: scale(1.02); }
+    55%  { transform: scale(1); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+  @keyframes mb-beat-mark {
+    0%   { opacity: 0; transform: translate(-50%, 6px); }
+    100% { opacity: 1; transform: translate(-50%, 0); }
+  }
+  @keyframes mb-splash-out {
+    to { opacity: 0; visibility: hidden; pointer-events: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mb-splash { animation: mb-splash-out 200ms linear 900ms forwards; }
+    .mb-splash__frame--wave,
+    .mb-splash__frame--curve,
+    .mb-splash__frame--outline { display: none; }
+    .mb-splash__hero,
+    .mb-splash__mark { opacity: 1; animation: none; }
+  }
+</style>
+
+<script is:inline>
+  (() => {
+    const splash = document.getElementById('mb-splash');
+    if (!splash) return;
+    if (document.documentElement.classList.contains('splash-seen')) {
+      splash.remove();
+      return;
+    }
+
+    try { sessionStorage.setItem('mb-splash-seen', '1'); } catch (_) {}
+    document.documentElement.classList.add('splash-playing');
+
+    const cleanup = () => {
+      document.documentElement.classList.remove('splash-playing');
+      document.documentElement.classList.add('splash-seen');
+      splash.remove();
+    };
+
+    const dismiss = () => {
+      if (splash.classList.contains('is-dismissed')) return;
+      splash.classList.add('is-dismissed');
+    };
+
+    splash.addEventListener('animationend', (e) => {
+      if (e.animationName === 'mb-splash-out') cleanup();
+    });
+    splash.addEventListener('click', dismiss);
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') dismiss();
+    }, { once: true });
+
+    // Safety net in case animationend never fires (e.g. tab backgrounded).
+    setTimeout(cleanup, 4000);
+  })();
+</script>
