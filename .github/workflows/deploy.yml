@@ -2,11 +2,11 @@ name: Deploy to Netlify
 
 on:
   push:
-    branches: [main]
+    branches: [main, "claude/**"]
   workflow_dispatch:
 
 concurrency:
-  group: deploy-netlify
+  group: deploy-netlify-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
@@ -29,7 +29,8 @@ jobs:
         working-directory: web
         run: npm run build
 
-      - name: Deploy to Netlify
+      - name: Deploy to Netlify (production)
+        if: github.ref == 'refs/heads/main'
         working-directory: web
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
@@ -39,3 +40,22 @@ jobs:
           --prod
           --dir=dist
           --message "${{ github.event.head_commit.message || github.sha }}"
+
+      - name: Deploy to Netlify (preview)
+        if: github.ref != 'refs/heads/main'
+        working-directory: web
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        run: |
+          slug="${GITHUB_REF_NAME//\//-}"
+          slug="${slug,,}"
+          slug="${slug:0:37}"
+          npx --yes netlify-cli@latest deploy \
+            --dir=dist \
+            --alias "$slug" \
+            --message "preview: ${{ github.sha }}" \
+            | tee /tmp/netlify-out.txt
+          url=$(grep -Eo 'https://[a-z0-9.-]+\.netlify\.app[^[:space:]]*' /tmp/netlify-out.txt | head -1)
+          echo "## Preview deploy" >> "$GITHUB_STEP_SUMMARY"
+          echo "$url" >> "$GITHUB_STEP_SUMMARY"
