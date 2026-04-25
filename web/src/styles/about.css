@@ -143,38 +143,17 @@
   margin-top: 6px;
 }
 
-.about-tags {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  letter-spacing: 0.06em;
-  color: var(--fg3);
-  margin: 12px 0 0;
-}
-.about-tags .line {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  align-items: center;
-}
-.about-tags .line i {
-  font-style: normal;
-  color: var(--fg4);
-  opacity: 0.6;
-}
-
 /* Line-by-line stagger reveal */
 .about-eyebrow,
 .about-title .line,
-.about-body .line,
-.about-tags .line {
+.about-body .line {
   opacity: 0;
   transform: translateY(10px);
   animation: about-line-in 800ms var(--ease-out) forwards;
   animation-delay: calc(220ms + var(--i, 0) * 110ms);
 }
 .about-title .line,
-.about-body .line,
-.about-tags .line {
+.about-body .line {
   display: block;
 }
 
@@ -188,8 +167,7 @@
   .about-portrait img,
   .about-eyebrow,
   .about-title .line,
-  .about-body .line,
-  .about-tags .line {
+  .about-body .line {
     animation: none !important;
     transform: none !important;
     opacity: 1 !important;
